@@ -15,10 +15,12 @@ let errors = [];
 let delays = [delay];
 let results = []
 
-document.onkeydown = function (e) {
-  e = e || window.event;
-  let charCode = e.keyCode || e.which;
-  let charStr = String.fromCharCode(charCode);
+function func (e, charStr) {
+  if (e !== null){
+    e = e || window.event;
+    let charCode = e.keyCode || e.which;
+    charStr = String.fromCharCode(charCode);
+  }
 
   if (!keyPrsd && charStr === ' ') {
     keyPrsd = true;
@@ -75,6 +77,12 @@ document.onkeydown = function (e) {
     document.getElementsByTagName('html')[0].style.backgroundColor = "#ffffff";
   }
 };
+
+document.onkeydown = func;
+
+function mousePressed(){
+  func(null, ' ');
+}
     </script>
     <style>
 h1 {
