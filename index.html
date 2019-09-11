@@ -1,0 +1,117 @@
+<doctype HTML>
+  <html>
+
+  <head>
+    <title>Reaction Timer</title>
+    <script>
+let keyPrsd = false;
+let start;
+let maxMS = 16000;
+let minMS = 8000;
+let constDelay = undefined;
+let delay = constDelay || Math.floor(Math.random() * (maxMS - minMS) + minMS);
+let error = 0;
+let errors = [];
+let delays = [delay];
+let results = []
+
+document.onkeydown = function (e) {
+  e = e || window.event;
+  let charCode = e.keyCode || e.which;
+  let charStr = String.fromCharCode(charCode);
+
+  if (!keyPrsd && charStr === ' ') {
+    keyPrsd = true;
+    start = Date.now();
+    setTimeout(() => {
+      while (error === 0) {
+        if ((Date.now() - start) >= delay) {
+          // error = -1;
+          document.getElementsByTagName('html')[0].style.backgroundColor = "#00ff00";
+          break;
+        }
+      }
+    }, delay);
+    document.getElementById('instructions').innerHTML = `
+<h2></h2>
+    `
+  } else if (charStr === ' '){
+    if (error === 0 /*-1*/) {
+      error = (Date.now() - start) - delay;
+      errors.push(error);
+
+      for (let i = 0; i < errors.length; i++) {
+        document.getElementById('instructions').innerHTML = `<h2>`
+      }
+
+      let average = 0;
+
+      for (let i = 0; i < errors.length; i++) {
+        document.getElementById('instructions').innerHTML += `${errors[i] / 1000}<br>`
+        average += errors[i];
+      }
+
+      average /= errors.length;
+
+
+      document.getElementById('instructions').innerHTML += `</h2>
+      <h4>Average: ${average} ms<br>(${average / 1000} seconds)</h4>
+  <h4>Press spacebar to try again.</h4>
+      `
+      setTimeout(() => {
+        error = -2;
+      }, 10);
+    }
+
+  }
+  if (error === -2 && charStr === ' ') {
+    error = 0;
+    delay = constDelay || Math.floor(Math.random() * (minMS - maxMS) + minMS);
+    delays.push(delay);
+    keyPrsd = false;
+    document.getElementById('instructions').innerHTML = `
+<h3>Press the spacebar to start, then again when the screen changes.</h3>
+    `
+    document.getElementsByTagName('html')[0].style.backgroundColor = "#ffffff";
+  }
+};
+    </script>
+    <style>
+h1 {
+  text-align: center;
+  font-size: 48px;
+  padding: 2%;
+}
+
+h2 {
+  font-size: 36px;
+  margin-top: 15%;
+}
+
+h3 {
+  font-size: 28px;
+  margin-top: 15%;
+}
+
+body {
+  text-align: center;
+}
+
+input {
+  text-align: center;
+  font-size: 48px;
+  padding: 2%;
+}
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <h1>Reaction Timer</h1>
+    </div>
+    <div id="instructions">
+      <h3>Press the spacebar to start, then again when the screen changes.</h3>
+    </div>
+  </body>
+
+  </html>
